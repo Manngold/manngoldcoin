@@ -1,0 +1,10 @@
+{
+  "name": "manngoldcoin",
+  "version": "1.0.0",
+  "description": "Practice NodeJS and Blockchain",
+  "main": "src.server.js",
+  "repository": "https://github.com/Manngold/manngoldcoin.git",
+  "author": "Manngold <36980767+Manngold@users.noreply.github.com>",
+  "license": "MIT",
+  "private": false
+}
