@@ -20,10 +20,11 @@ const genesisBlock = new Block(
 
 let blockchain = [genesisBlock];
 
-const getLastBlock = () => blockchain[blockchain - 1];
+const getLastBlock = () => blockchain[blockchain.length - 1];
 
 const createHash = (index, previousHash, timestamp, data) =>
-    CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
+    CryptoJS.SHA256(index + previousHash + timestamp + JSON.stringify(data)
+).toString();
 
 
 const getTimeStamp = () => new Date().getTime() / 1000;
@@ -50,7 +51,11 @@ const creatNewBlock = data => {
 const getBlockHash = (block) => createHash(block.index, block.previousHash, block.timestamp, block.data) 
 
 const isNewBlockValid = (candidateBlock, latestBlock) => {
-    if(latestBlock.index + 1 !== candidateBlock.index){
+    if(!isNewStructureValid(candidateBlock)){
+        console.log('The candidate block structure is not valid');
+        return false;
+    }
+    else if(latestBlock.index + 1 !== candidateBlock.index){
         console.log('The candidate block dosent have a vaild index');
         return false;
     }else if(latestBlock.hash !== candidateBlock.previousHash){
@@ -72,3 +77,20 @@ const isNewStructureValid = (block) => {
         typeof block.data === 'string'
     )
 }
+
+const isChainValid = candidateChain => {
+    const isGenesisValid = block => {
+        return JSON.stringify(block) === JSON.stringify(genesisBlock);
+    };
+    if(!isGenesisValid(candidateChain[0])){
+            console.log("The candidateChain's genesisBlock ist not the same as our genesisBlock");
+            return false;
+
+    }//Check first chadidateChain 
+    for(let i = 1; i < candidateChain.length ; i++){
+        if(!isNewBlockValid(candidateChain[i], candidateChain[i - 1])){
+            return false
+        }
+    }//For not Validation GenesisBlock
+    return true;
+};
