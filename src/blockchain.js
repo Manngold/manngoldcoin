@@ -123,5 +123,5 @@ const addBlockToChain = candidateBlock => {
 module.exports = {
     getBlockchain,
     createNewBlock,
-    addBlockToChain
+    getLastBlock
 };
