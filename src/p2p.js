@@ -69,7 +69,7 @@ const handleSocketMessage = ws => {
         console.log(message);
         switch(message.type){
             case GET_LATEST: 
-            sendMessage(ws, getLastBlock());
+            sendMessage(ws, responseLatest());
             break;
         }
     });
@@ -77,6 +77,7 @@ const handleSocketMessage = ws => {
 
 const sendMessage = (ws, message) => ws.send(JSON.stringify(message));
 
+const responseLatest = () => blockChainResponse([getLastBlock])
 const handleSocketError = ws => {
     const closeSocketConnection = ws => {
         ws.close()
