@@ -2,7 +2,7 @@ const WebSocket = require("ws"),
     BlockChain = require("./blockchain");//socket is connection between server
 
 
-const { getLastBlock } = BlockChain;
+const { getLastBlock, isBlockStructureValid } = BlockChain;
 const sockets = [];
 //p2p can stay same port because each other has different protocole
 
@@ -69,15 +69,35 @@ const handleSocketMessage = ws => {
         console.log(message);
         switch(message.type){
             case GET_LATEST: 
-            sendMessage(ws, responseLatest());
-            break;
+                sendMessage(ws, responseLatest());
+                break;
+            case BLOCKCHAIN_RESPONSE:
+                const receivedBlocks = message.data
+                if(receivedBlocks === null){
+                    break;
+                }
+                handleBlockchainResponse(receivedBlocks)
+                break;
         }
     });
 };
 
+const handleBlockchainResponse = receivedBlocks => {
+if(receivedBlocks.length === 0){
+    console.log("received blocks have a length of 0");
+    return;
+}
+const latestBlockReceived = receivedBlocks(receivedBlocks.length - 1);
+if(!isBlockStructureValid(latestBlockReceived)){
+    console.log("The block structure of the block received is not valid");
+    return;
+}
+};
+
 const sendMessage = (ws, message) => ws.send(JSON.stringify(message));
 
-const responseLatest = () => blockChainResponse([getLastBlock])
+const responseLatest = () => blockChainResponse([getLastBlock]);
+
 const handleSocketError = ws => {
     const closeSocketConnection = ws => {
         ws.close()
