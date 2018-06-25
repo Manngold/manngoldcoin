@@ -53,8 +53,8 @@ const createNewBlock = data => {
 
 const getBlockHash = (block) => createHash(block.index, block.previousHash, block.timestamp, block.data) 
 
-const isNewBlockValid = (candidateBlock, latestBlock) => {
-    if(!isNewStructureValid(candidateBlock)){
+const isBlockValid = (candidateBlock, latestBlock) => {
+    if(!isBlockStructureValid(candidateBlock)){
         console.log('The candidate block structure is not valid');
         return false;
     }
@@ -71,7 +71,7 @@ const isNewBlockValid = (candidateBlock, latestBlock) => {
     return true;
 };
 
-const isNewStructureValid = (block) => {
+const isBlockStructureValid = (block) => {
     return (
         typeof block.index ==='number' &&
         typeof block.hash === "string" &&
@@ -123,5 +123,6 @@ const addBlockToChain = candidateBlock => {
 module.exports = {
     getBlockchain,
     createNewBlock,
-    getLastBlock
+    getLastBlock,
+    isBlockStructureValid
 };
